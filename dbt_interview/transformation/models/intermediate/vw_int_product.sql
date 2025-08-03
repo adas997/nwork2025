@@ -1,5 +1,13 @@
 with price_date as (
-    select p.*
+    select p.*,
+    row_number () over(
+        partition by p.product_id,
+        p.productcode,
+        p.type
+        order by p.product_id,
+            p.productcode,
+            p.type
+    ) rn    
     from {{ source ('stg_source', 'product') }} p
 )
 select product_id,
@@ -20,3 +28,4 @@ select product_id,
     isarchived as is_archived,
     stockkeepingunit as stock_keeping_unit
 from price_date
+where rn = 1

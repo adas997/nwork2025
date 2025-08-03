@@ -1,6 +1,6 @@
 models:
   - name: dim_mart_products
-    description:   '{{ doc("dim_mart_products__") }}'
+    description: "Dimension that lists the descriptive attributes for Products. product_sk is hashed and is treated as the Surrogate Key"
     columns:
       - name: prod_sk
         data_type: varchar

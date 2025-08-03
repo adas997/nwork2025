@@ -1,5 +1,5 @@
 with contact_data as (
-    select c.* --, row_number () over( partition by c.contact_id order by c.contact_id) rn
+    select c.* , row_number () over( partition by c.contact_id order by c.contact_id) rn
     from {{ source ('stg_source', 'contact') }} c
 )
 select contact_id,
@@ -33,3 +33,4 @@ select contact_id,
     lastmodifiedbyid as con_modified_by
 from contact_data
 where 1 = 1
+and rn = 1

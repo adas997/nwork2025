@@ -1,5 +1,5 @@
 with opportunity_data as (
-    select o.*
+    select o.* , row_number () over( partition by o.opportunity_id,o.name order by o.opportunity_id,o.name) rn
     from {{ source ('stg_source', 'opportunity') }} o
 )
 select opportunity_id,

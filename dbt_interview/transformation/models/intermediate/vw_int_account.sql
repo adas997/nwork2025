@@ -1,5 +1,10 @@
 with account_data as (
-    select a.* -- ,row_number () over( partition by a.account_id, a.name order by a.name) rn
+    select a.*,
+    row_number () over(
+        partition by a.account_id,
+        a.name
+        order by a.name
+    ) rn
     from {{ source ('stg_source', 'account') }} a
 )
 select account_id,
@@ -29,3 +34,4 @@ select account_id,
     lastmodifiedbyid as acc_modified_by
 from account_data
 where 1 = 1 
+and rn = 1

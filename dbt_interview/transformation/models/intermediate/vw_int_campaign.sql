@@ -1,5 +1,10 @@
 with campaign_data as (
-    select c.* --row_number () over( partition by c.campaign_id, c.name order by c.name) rn
+    select c.*,
+    row_number () over(
+        partition by c.campaign_id,
+        c.name
+        order by c.name
+    ) rn
     from {{ source ('stg_source', 'campaign') }} c
 )
 select campaign_id,
@@ -22,3 +27,4 @@ select campaign_id,
     lastmodifiedbyid as cmp_modified_by
 from campaign_data
 where 1 = 1
+and rn = 1

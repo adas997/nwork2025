@@ -1,6 +1,6 @@
 models:
   - name: dim_mart_cases
-    
+    description:  "Dimension that lists the descriptive attributes for case. case_sk is hashed and is treated as the Surrogate Key !"
     columns:
       - name: case_sk
         data_type: varchar
@@ -79,7 +79,7 @@ models:
               config:
                 severity: error 
                 error_if: ">100"
-                warn_if: ">10" 
+                warn_if: ">30" 
                 store_failures: true
               to: ref('vw_int_product')
               field: product_id

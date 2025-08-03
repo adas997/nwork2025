@@ -1,5 +1,5 @@
 with case_data as (
-    select c.* --,row_number () over( partition by c.case_id order by c.case_id) rn
+    select c.* ,row_number () over( partition by c.case_id,c.casenumber order by c.case_id,c.casenumber) rn
     from {{ source ('stg_source', 'cases') }} c
 )
 select case_id,
@@ -30,3 +30,4 @@ select case_id,
     lastmodifieddate as case_modified_date,
     lastmodifiedbyid as case_modified_by
 from case_data
+where rn = 1

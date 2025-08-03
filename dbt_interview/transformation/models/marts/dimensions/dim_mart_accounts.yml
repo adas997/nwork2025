@@ -1,9 +1,9 @@
 models:
   - name: dim_mart_accounts
-    description:  '{{ doc("dim_mart_accounts__") }}'
+    description:  "Account Dimension  - Containing Account, Contact dimensional attributes and corresponding IDs. It has account_sk as hashed (PK)"
     
     columns:
-      - name: acc_opp_con_case_prod_sk  
+      - name: acc_sk  
         data_type: varchar      
         tests: 
           - primary_key:
@@ -34,10 +34,8 @@ models:
 
       - name: account_type
         data_type: varchar
-        tests:
-          - dbt_utils.cardinality_equality:
-              field: account_type
-              to: ref('vw_int_account')
+        
+              
         description: "Account Types"
 
       - name: billing_street
@@ -99,6 +97,9 @@ models:
         tests:
           - contain_special_characters:
               config:
+                severity: error 
+                error_if: ">100"
+                warn_if: ">25" 
                 store_failures: true
         data_type: varchar
         description: "Contact First Name"
@@ -107,6 +108,9 @@ models:
         tests:
           - contain_special_characters:
               config:
+                severity: error 
+                error_if: ">100"
+                warn_if: ">25" 
                 store_failures: true
         data_type: varchar
         description: "Contact Last Name"

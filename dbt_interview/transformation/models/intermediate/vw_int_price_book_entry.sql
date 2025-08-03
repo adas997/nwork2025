@@ -1,5 +1,13 @@
 with price_date as (
-    select p.*
+    select p.*,
+    row_number () over(
+        partition by p.pricebook_entry_id,
+        p.pricebook2id,
+        p.product2id
+        order by p.pricebook_entry_id,
+            p.pricebook2id,
+            p.product2id
+    ) rn
     from {{ source ('stg_source', 'pricebook') }} p
 )
 select pricebook_entry_id,
@@ -15,3 +23,4 @@ select pricebook_entry_id,
     isdeleted as is_deleted,
     isarchived as is_archived
 from price_date
+where rn = 1

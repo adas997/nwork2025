@@ -1,5 +1,9 @@
 with user_data as (
-    select u.*
+    select u.*,
+    row_number () over(
+        partition by u.user_id
+        order by u.user_id
+    ) rn
     from {{ source ('stg_source', 'users') }} u
 )
 select user_id,
@@ -28,3 +32,4 @@ select user_id,
     lastmodifieddate as user_modified_date,
     lastmodifiedbyid as user_modified_by
 from user_data
+where rn = 1

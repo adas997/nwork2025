@@ -1,5 +1,11 @@
 with user_role_data as (
-    select u.*
+    select u.*,
+    row_number () over(
+        partition by u.user_role_id,
+        u.name
+        order by u.user_role_id,
+            u.name
+    ) rn
     from {{ source ('stg_source', 'users_role') }} u
 )
 select user_role_id,
@@ -16,3 +22,4 @@ select user_role_id,
     portalrole as portal_role,
     portalaccountownerid as portal_account_ownerid
 from user_role_data
+where rn = 1
