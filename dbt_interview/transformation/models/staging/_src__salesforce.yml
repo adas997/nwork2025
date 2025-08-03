@@ -4,18 +4,63 @@ sources:
   - name: salesforce
     database: dbt
     schema: raw
+    
+
+
+
     tables:
       - name: account
+        config:
+          freshness:
+            warn_after: {count: 120000, period: hour}
+            error_after: {count: 240000, period: hour}
+          loaded_at_field: lastmodifieddate
+
       - name: campaign
+        config:
+          freshness:
+            warn_after: {count: 120000, period: hour}
+            error_after: {count: 240000, period: hour}
+          loaded_at_field: lastmodifieddate
       - name: case
+        config:
+          freshness:
+            warn_after: {count: 120000, period: hour}
+            error_after: {count: 240000, period: hour}
+          loaded_at_field: lastmodifieddate
       - name: case_history_2
       - name: contact
+        config:
+          freshness:
+            warn_after: {count: 120000, period: hour}
+            error_after: {count: 240000, period: hour}
+          loaded_at_field: lastmodifieddate
       - name: lead
+        config:
+          freshness:
+            warn_after: {count: 120000, period: hour}
+            error_after: {count: 240000, period: hour}
+          loaded_at_field: lastmodifieddate
       - name: opportunity
+        config:
+          freshness:
+            warn_after: {count: 120000, period: hour}
+            error_after: {count: 240000, period: hour}
+          loaded_at_field: lastmodifieddate
       - name: opportunity_history
       - name: pricebook_entry
+        config:
+          freshness:
+            warn_after: {count: 120000, period: hour}
+            error_after: {count: 240000, period: hour}
+          loaded_at_field: lastmodifieddate
       - name: product_2
       - name: record_type
       - name: solution
       - name: user
+        config:
+          freshness:
+            warn_after: {count: 120000, period: hour}
+            error_after: {count: 240000, period: hour}
+          loaded_at_field: lastmodifieddate
       - name: user_role

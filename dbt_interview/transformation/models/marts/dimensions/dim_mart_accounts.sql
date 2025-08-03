@@ -50,54 +50,41 @@ select {{ dbt_utils.generate_surrogate_key
 -- account
 
     a.account_id,
-    a.parent_id,
-    a.account_type,
-    a.billing_street,
-    a.billing_city,
-    a.billing_state,
-    a.billing_postal_code,
-    a.billing_country,
-    a.shipping_street,
-    a.shipping_city,
-    a.shipping_state,
-    a.shipping_postal_code,
-    a.shipping_country,
-
-
-
+a.parent_id,
+a.account_type,
+a.billing_street,
+a.billing_city,
+a.billing_state,
+a.billing_postal_code,
+a.billing_country,
+a.shipping_street,
+a.shipping_city,
+a.shipping_state,
+a.shipping_postal_code,
+a.shipping_country,
 -- contact
-   co.contact_id, 
-   co.first_name,
-   co.last_name,
-   co.salutation,
-   co.mailing_street ,
-   co.mailing_city,
-   co.mailing_state,
-   co.phone,
-   co.fax,
-   co.mobilephone,
-
+co.contact_id,
+co.first_name,
+co.last_name,
+co.salutation,
+co.mailing_street,
+co.mailing_city,
+co.mailing_state,
+co.phone,
+co.fax,
+co.mobilephone,
 -- DWH 
-   a.is_deleted as is_account_deleted,   
-   co.is_deleted as is_contact_deleted,
-   
-
+a.is_deleted as is_account_deleted,
+co.is_deleted as is_contact_deleted,
 -- Dates
-   a.acc_created_date,
-   a.acc_modified_date,   
-   co.con_created_date,
-   co.con_modified_date,
-   
-
-   current_date() as account_load_date
-
-from account_rec a 
-
-left join contact_rec co 
-   on (a.account_id = co.account_id )
-
-
-where 1=1
+a.acc_created_date,
+a.acc_modified_date,
+co.con_created_date,
+co.con_modified_date,
+current_date() as account_load_date
+from account_rec a
+    left join contact_rec co on (a.account_id = co.account_id)
+where 1 = 1
 )
 select *
- from final
+from final
