@@ -33,9 +33,9 @@ fct_data as
     select 
       f.account_id,
       f.opportunity_id,
-      f.total_revenue_earned_usd as "Total Revenue earned in USD" ,
-      f.total_opportunity_amount_usd as "Total Amount in USD",
-      f.total_revenue_expected_usd as "Total Revenue expected in USD",
+      f.total_revenue_earned_usd as "Total Revenue earned (USD)" ,
+      f.total_opportunity_amount_usd as "Total Amount (USD)",
+      f.total_revenue_expected_usd as "Total Revenue expected (USD)",
       f.average_probability as "Avg. Probability"
 
       from {{ ref ('fct_mart_revenues') }}  f
@@ -44,9 +44,9 @@ final as
 (
 select
  a.*,
- f."Total Revenue earned in USD",
- f."Total Amount in USD",
- f."Total Revenue expected in USD",
+ f."Total Revenue earned (USD)",
+ f."Total Amount (USD)",
+ f."Total Revenue expected (USD)",
  f."Avg. Probability"
 
  from fct_data f
