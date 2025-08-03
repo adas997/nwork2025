@@ -43,27 +43,18 @@ select
           }} as prod_sk,
 
    p.product_id,
-   p.product_code,
-   p.product_type,
-   p.product_class,
-   p.product_description,
-   p.quantity_unit,
-
-
+p.product_code,
+p.product_type,
+p.product_class,
+p.product_description,
+p.quantity_unit,
 -- DWH Dates
-   p.prod_created_date,
-   p.prod_modified_date ,
-   
+p.prod_created_date,
+p.prod_modified_date,
 -- Snapshot Dates
-   
-   p.is_deleted as is_prod_deleted,
-
-   current_date() as prod_load_date
-
-   from prod_rec p 
-   
-
-
-
+p.is_deleted as is_prod_deleted,
+current_date() as prod_load_date
+from prod_rec p
 )
-select * from final
+select *
+from final
