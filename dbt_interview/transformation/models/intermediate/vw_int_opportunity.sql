@@ -1,12 +1,19 @@
 with opportunity_data as (
-    select o.* , row_number () over( partition by o.opportunity_id,o.name order by o.opportunity_id,o.name) rn
+    select o.*,
+    row_number () over(
+        partition by o.opportunity_id,
+        o.name
+        order by o.opportunity_id,
+            o.name
+    ) rn
     from {{ source ('stg_source', 'opportunity') }} o
 )
 select opportunity_id,
     accountid as account_id,
-    case when isprivate = 0 then 'Private' 
-         else 'Public' 
-         end as is_private,
+    case
+        when isprivate = 0 then 'Private'
+        else 'Public'
+    end as is_private,
     isdeleted as is_deleted,
     name as opportunity_name,
     description as opportunity_description,

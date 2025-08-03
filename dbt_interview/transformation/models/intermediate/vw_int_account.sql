@@ -33,5 +33,5 @@ select account_id,
     lastmodifieddate as acc_modified_date,
     lastmodifiedbyid as acc_modified_by
 from account_data
-where 1 = 1 
-and rn = 1
+where 1 = 1
+    and rn = 1

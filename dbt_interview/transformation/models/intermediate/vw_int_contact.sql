@@ -33,4 +33,4 @@ select contact_id,
     lastmodifiedbyid as con_modified_by
 from contact_data
 where 1 = 1
-and rn = 1
+    and rn = 1

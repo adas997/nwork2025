@@ -27,4 +27,4 @@ select campaign_id,
     lastmodifiedbyid as cmp_modified_by
 from campaign_data
 where 1 = 1
-and rn = 1
+    and rn = 1
