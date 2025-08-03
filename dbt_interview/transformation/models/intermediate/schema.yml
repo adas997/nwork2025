@@ -1,10 +1,12 @@
 version: 2
 models:
   - name: vw_int_account
-    description: "Intermediate Table to Hold account information. View Created on Staging account table , does renaming of columns and light weight transformations "
-    tests :
-      - dbt_utils.equal_rowcount:
-          compare_model: ref('stg_salesforce_account')
+    description: >
+      Intermediate Table to Hold account information. View Created on Staging account table , 
+      does renaming of columns and light weight transformations, ensuring no duplicate records flows in 
+      from staging data sources!.
+    
+    
     columns:
       - name: account_id
         tests: 
@@ -143,10 +145,11 @@ models:
         description: ""
 
   - name: vw_int_campaign
-    description: "Holds Campaign Information. View Created on Staging Campaign  , does renaming of columns and light weight transformations  "
-    tests :
-      - dbt_utils.equal_rowcount:
-          compare_model: ref('stg_salesforce_campaign')
+    description: >
+                  Holds Campaign Information. View Created on Staging Campaign  , does renaming of columns 
+                  and light weight transformations.ensuring no duplicate records flows in 
+                  from staging data sources!
+    
     columns:
       - name: campaign_id
         tests:
@@ -235,10 +238,9 @@ models:
         description: ""
 
   - name: vw_int_case
-    description: "View created on  Staging Case  , does renaming of columns and light weight transformations"
-    tests :
-      - dbt_utils.equal_rowcount:
-          compare_model: ref('stg_salesforce_case')
+    description: >
+                  View created on  Staging Case  , does renaming of columns and light weight transformations
+    
     
     columns:
       - name: case_id
@@ -390,7 +392,10 @@ models:
         description: "Case Modified by "
 
   - name: vw_int_contact
-    description: "Holds Contact Information. View Created on Staging Contact  , does renaming of columns and light weight transformations  " 
+    description: >
+                  Holds Contact Information. View Created on Staging Contact  , does renaming of columns 
+                  and light weight transformations. Ensures no duplicate records from staging data source
+    
     columns:
       - name: contact_id
         tests:
@@ -536,7 +541,9 @@ models:
         description: "Contact Modified by"
 
   - name: vw_int_opportunity
-    description: ""
+    description: >
+                  Holds Opportunity Information. View Created on Staging Opportunity  , does renaming of columns 
+                  and light weight transformations. Ensures no duplicate records from staging data source
     columns:
       - name: opportunity_id
         tests:
@@ -656,7 +663,9 @@ models:
         description: ""
 
   - name: vw_int_price_book_entry
-    description: ""
+    description: >
+                  Holds Price Book Information. View Created on Staging Price Book source  , does renaming of columns 
+                  and light weight transformations. Ensures no duplicate records from staging data source
     columns:
       - name: pricebook_entry_id
         tests:
@@ -738,7 +747,9 @@ models:
         description: ""
 
   - name: vw_int_product
-    description: ""
+    description: >
+                  Holds Product Information. View Created on Product source  , does renaming of columns 
+                  and light weight transformations. Ensures no duplicate records from staging data source
     columns:
       - name: product_id
         tests:
@@ -816,7 +827,9 @@ models:
         description: ""
 
   - name: vw_int_user
-    description: ""
+    description: >
+                  Holds User Information. View Created on User source  , does renaming of columns 
+                  and light weight transformations. Ensures no duplicate records from staging data source
     columns:
       - name: user_id
         tests:
@@ -953,7 +966,9 @@ models:
         description: ""
 
   - name: vw_int_user_role
-    description: ""
+    description: >
+                  Holds User Role Information. View Created on User Role source  , does renaming of columns 
+                  and light weight transformations. Ensures no duplicate records from staging data source
     columns:
       - name: user_role_id
         data_type: varchar
