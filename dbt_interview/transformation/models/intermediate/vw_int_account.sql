@@ -3,7 +3,7 @@ with account_data as (
     row_number () over(
         partition by a.account_id,
         a.name
-        order by a.name
+        order by a.account_id,a.name
     ) rn
     from {{ source ('stg_source', 'account') }} a
 )

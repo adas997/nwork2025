@@ -3,7 +3,7 @@ with campaign_data as (
     row_number () over(
         partition by c.campaign_id,
         c.name
-        order by c.name
+        order by c.campaign_id,c.name
     ) rn
     from {{ source ('stg_source', 'campaign') }} c
 )
