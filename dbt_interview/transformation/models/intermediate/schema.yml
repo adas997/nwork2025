@@ -332,6 +332,10 @@ models:
         description: "Name of the supplier"
 
       - name: supplied_email
+        tests:
+          - valid_email:
+              config:
+                store_failures: true
         data_type: varchar
         description: "Email of supplier"
 
@@ -639,7 +643,7 @@ models:
               config: 
                 severity: error 
                 error_if: ">100"
-                warn_if: ">10"
+                warn_if: ">45"
                 store_failures: true
               to: ref('vw_int_contact')
               field: contact_id

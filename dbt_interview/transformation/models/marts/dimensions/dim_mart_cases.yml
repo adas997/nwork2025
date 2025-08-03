@@ -112,6 +112,10 @@ models:
         description: "Name of the supplier"
 
       - name: supplied_email
+        tests:
+          - valid_email:
+              config:
+                store_failures: true
         data_type: varchar
         description: "Email of supplier"
 

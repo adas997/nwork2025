@@ -35,6 +35,15 @@ models:
         description: "Parent ID"
 
       - name: account_type
+        tests:
+          - dbt_utils.cardinality_equality:
+              config:
+                severity: error 
+                error_if: ">100"
+                warn_if: ">10" 
+                store_failures: true
+              field: account_type
+              to: ref('vw_int_account')
         data_type: varchar
         
               
@@ -45,6 +54,13 @@ models:
         description: "Account Billing Street"
 
       - name: billing_city
+        tests:
+          - contain_special_characters:
+              config:
+                severity: error 
+                error_if: ">100"
+                warn_if: ">25" 
+                store_failures: true
         data_type: varchar
         description: "Account Billing City"
 
@@ -65,6 +81,13 @@ models:
         description: "Account Shipping Street"
 
       - name: shipping_city
+        tests:
+          - contain_special_characters:
+              config:
+                severity: error 
+                error_if: ">100"
+                warn_if: ">25" 
+                store_failures: true
         data_type: varchar
         description: "Account Shipping City"
 
@@ -77,6 +100,13 @@ models:
         description: "Account Shipping Postal Code"
 
       - name: shipping_country
+        tests:
+          - contain_special_characters:
+              config:
+                severity: error 
+                error_if: ">100"
+                warn_if: ">25" 
+                store_failures: true
         data_type: varchar
         description: "Account Shipping Country"
 

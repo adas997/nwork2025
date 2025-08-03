@@ -84,6 +84,9 @@ models:
         tests:
           - contain_special_characters:
               config:
+                severity: error 
+                error_if: ">100"
+                warn_if: ">10" 
                 store_failures: true
         data_type: varchar
         description: "First Name of the user"
@@ -92,6 +95,9 @@ models:
         tests:
           - contain_special_characters:
               config:
+                severity: error 
+                error_if: ">100"
+                warn_if: ">10" 
                 store_failures: true
         data_type: varchar
         description: "Last Name of the user"
@@ -140,6 +146,9 @@ models:
         tests:
           - contain_special_characters:
               config:
+                severity: error 
+                error_if: ">100"
+                warn_if: ">10" 
                 store_failures: true
         data_type: varchar
         description: ""
