@@ -1,6 +1,9 @@
 models:
   - name: dim_mart_users
-    description:  "Dimension that lists the descriptive attributes for Users. user_sk is hashed and is treated as the Surrogate Key !"
+    description: >
+      Dimension that lists the descriptive attributes for Users. user_sk is hashed 
+      and is treated as the Surrogate Key !
+    
     columns:
       - name: user_sk
         tests: 

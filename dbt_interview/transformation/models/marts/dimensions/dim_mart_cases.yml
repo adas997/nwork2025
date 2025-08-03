@@ -1,6 +1,9 @@
 models:
   - name: dim_mart_cases
-    description:  "Dimension that lists the descriptive attributes for case. case_sk is hashed and is treated as the Surrogate Key !"
+    description: >
+      Dimension that lists the descriptive attributes for case. case_sk is hashed and is treated as the 
+      Surrogate Key !
+    
     columns:
       - name: case_sk
         data_type: varchar

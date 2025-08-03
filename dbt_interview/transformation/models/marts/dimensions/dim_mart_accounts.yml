@@ -1,6 +1,8 @@
 models:
   - name: dim_mart_accounts
-    description:  "Account Dimension  - Containing Account, Contact dimensional attributes and corresponding IDs. It has account_sk as hashed (PK)"
+    description: >
+      Account Dimension  - Containing Account, Contact dimensional attributes and corresponding IDs. It has account_sk as hashed (PK) !.
+    
     
     columns:
       - name: acc_sk  
