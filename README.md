@@ -11,24 +11,24 @@
 	  
 	  
 	  - Logic Layer : This refers to the Intermediate models. 
-					  These models are built on the top of models in the Root (Staging) layer.
-	                  Light weight logic , renaming of columns, eleminating duplicates are done in this layer. 
-					  The models are materialized as Views.
+                      These models are built on the top of models in the Root (Staging) layer.
+                      Light weight logic , renaming of columns, eleminating duplicates are done in this layer. 
+                      The models are materialized as Views.
 					  
 					  
 					  
       - Dimension and
 	    Activity Layer: This layer refers to the Models in the marts folder. 
 		                It has two further subfolders 1. dimensions 2. facts.
-					    Dimension Models are stored in dimension folder and facts are in 
-					    facts folder.All the models are materialized as incremental tables.
+                        Dimension Models are stored in dimension folder and facts are in 
+                        facts folder.All the models are materialized as incremental tables.
 					  
 					  
 					  
 	  - Reporting
 	    Layer		: This Layer coantains the views built on the top of Dimensions and Facts. 
-		              This layer is meant specifically for 
-					  BI and Data Analysts to build reports 
+                      This layer is meant specifically for 
+                      BI and Data Analysts to build reports 
 					  
 					  
 					  
