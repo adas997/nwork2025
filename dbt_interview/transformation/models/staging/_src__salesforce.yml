@@ -55,6 +55,11 @@ sources:
             error_after: {count: 240000, period: hour}
           loaded_at_field: lastmodifieddate
       - name: product_2
+        config:
+          freshness:
+            warn_after: {count: 120000, period: hour}
+            error_after: {count: 240000, period: hour}
+          loaded_at_field: lastmodifieddate
       - name: record_type
       - name: solution
       - name: user
