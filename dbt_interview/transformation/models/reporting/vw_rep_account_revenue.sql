@@ -2,6 +2,7 @@ with dim_details as
 (
     select a.account_id as "Account Id",
     o.opportunity_id as "Opportunity Id",
+    a.contact_id as "Contact Id",
     a.account_type as "Account Type",
     a.billing_street as "Billing Street",
     a.billing_city as "Billing City",
@@ -33,17 +34,27 @@ fct_data as
     select 
       f.account_id,
       f.opportunity_id,
+      f.user_id,
+      u.first_name as "User First Name",
+      u.last_name as "User Last Name",
+      u.company_name as "User Company Name",
+      u.department as "User Department",
       f.total_revenue_earned_usd as "Total Revenue earned (USD)" ,
       f.total_opportunity_amount_usd as "Total Amount (USD)",
       f.total_revenue_expected_usd as "Total Revenue expected (USD)",
       f.average_probability as "Avg. Probability"
-
       from {{ ref ('fct_mart_revenues') }}  f
+      left join {{ ref ('dim_mart_users') }} u 
+         on (f.user_id = u.user_id)
 ),
 final as 
 (
 select
  a.*,
+ f."User First Name",
+ f."User Last Name",
+ f."User Company Name",
+ f."User Department",
  f."Total Revenue earned (USD)",
  f."Total Amount (USD)",
  f."Total Revenue expected (USD)",

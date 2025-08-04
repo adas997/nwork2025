@@ -172,3 +172,7 @@ models:
       - name: case_access_for_accountowner
         data_type: varchar
         description: ""
+
+      - name: user_modified_date
+        data_type: timestamp
+        description: "Date when the user was modified"

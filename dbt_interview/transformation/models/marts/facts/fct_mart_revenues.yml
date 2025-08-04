@@ -28,9 +28,24 @@ models:
                 error_if: ">100"
                 warn_if: ">10" 
                 store_failures: true
-              to: ref('dim_mart_account')
+              to: ref('dim_mart_accounts')
               field: account_id
         description: "Refers to account id in dim_mart_accounts"
+
+      - name: contact_id
+        data_type: varchar
+        tests:
+          - not_null:
+              tags: [critical]
+          - relationships:
+              config:
+                severity: error 
+                error_if: ">100"
+                warn_if: ">10" 
+                store_failures: true
+              to: ref('dim_mart_accounts')
+              field: contact_id
+        description: "Refers to contact_id id in dim_mart_accounts"
 
       - name: opportunity_id
         data_type: varchar
@@ -46,6 +61,21 @@ models:
               to: ref('dim_mart_opportunities')
               field: opportunity_id
         description: "Refers to opportunity id in dim_mart_opportunities"
+
+      - name: user_id
+        data_type: varchar
+        tests:
+          - not_null:
+              tags: [critical]
+          - relationships:
+              config:
+                severity: error 
+                error_if: ">100"
+                warn_if: ">10" 
+                store_failures: true
+              to: ref('dim_mart_users')
+              field: user_id
+        description: "Refers to opportunity id in dim_mart_users" 
 
       - name: total_revenue_earned_usd
         data_type: decimal(16,2)
