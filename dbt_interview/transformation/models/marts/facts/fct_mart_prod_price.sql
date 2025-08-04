@@ -100,6 +100,13 @@ from prod_data p
 where is_prod_deleted = 1
     and pr.is_deleted = 1
     and c.is_deleted = 1
+
+    {% if is_incremental() %}
+    
+     and p.prod_load_date >= (select coalesce(max(prod_load_date),'1900-01-01') from {{ this }} )
+
+     {% endif%}
+
 ),
 final as 
 (

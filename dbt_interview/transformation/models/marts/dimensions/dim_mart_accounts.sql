@@ -89,3 +89,10 @@ where 1 = 1
 )
 select *
 from final
+
+{% if is_incremental() %}
+
+where acc_modified_date >= (select coalesce(max(acc_modified_date),'1900-01-01') from {{ this }} )
+   and con_modified_date >= (select coalesce(max(con_modified_date),'1900-01-01') from {{ this }} )
+
+{% endif %}

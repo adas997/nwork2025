@@ -132,6 +132,14 @@ select
                )
 where dim_acc.is_account_deleted = 1
     and dim_opp.is_opportunity_deleted = 1
+
+    {% if is_incremental() %}
+    
+     and dim_acc.account_load_date >= (select coalesce(max(account_load_date),'1900-01-01') from {{ this }} )
+     and dim_opp.opportunity_load_date >= (select coalesce(max(opportunity_load_date),'1900-01-01') from {{ this }} )
+     
+
+     {% endif%}
 ),
 final as 
 (  select

@@ -59,3 +59,10 @@ from prod_rec p
 )
 select *
 from final
+
+
+{% if is_incremental() %}
+
+where prod_modified_date >= (select coalesce(max(prod_modified_date),'1900-01-01') from {{ this }} )
+
+{% endif %}

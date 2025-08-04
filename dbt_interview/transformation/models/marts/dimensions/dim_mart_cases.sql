@@ -41,3 +41,9 @@ select
           }} as case_sk,
 cs.*
 from case_rec cs
+
+{% if is_incremental() %}
+
+where cs.case_modified_date >= (select coalesce(max(case_modified_date),'1900-01-01') from {{ this }} )
+
+{% endif %}

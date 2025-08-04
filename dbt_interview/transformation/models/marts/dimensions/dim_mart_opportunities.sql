@@ -60,3 +60,10 @@ from opportunity_rec o
 )
 
 select * from final
+
+
+{% if is_incremental() %}
+
+where oppr_modified_date >= (select coalesce(max(oppr_modified_date),'1900-01-01') from {{ this }} )
+
+{% endif %}

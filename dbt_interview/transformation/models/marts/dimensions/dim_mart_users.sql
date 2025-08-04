@@ -66,4 +66,5 @@ from user_data u
 where u.is_active = 1
  {% if is_incremental() %}
         and u.user_modified_date >= dateadd(day, -7, current_date)
+        and 
 {% endif %}
