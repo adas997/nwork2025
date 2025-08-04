@@ -3,6 +3,18 @@ models:
   - name: fct_mart_prod_price
     description: "This is the fact table that contains aggregated product price measures and related ids. Joined to product and price dimension"
     columns:
+      - name: fct_prod_sk  
+        data_type: varchar      
+        tests: 
+          - primary_key:
+              tags: [critical]
+              config:
+                severity: error 
+                error_if: ">100"
+                warn_if: ">10" 
+                store_failures: true    
+        description: "Surrogate Key , conseidered as Primary Key for the Fact"
+        
       - name: date_sk
         data_type: varchar
         description: "To refer to date dimension"

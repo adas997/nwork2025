@@ -2,6 +2,17 @@ models:
   - name: fct_mart_revenues
     description: "Fact Table that contains aggregated  revenue earned, total opportunity amount , revenue expected etc. Joined to account and opportunity dimension"
     columns:
+      - name: fct_revenue_sk  
+        data_type: varchar      
+        tests: 
+          - primary_key:
+              tags: [critical]
+              config:
+                severity: error 
+                error_if: ">100"
+                warn_if: ">10" 
+                store_failures: true    
+        description: "Surrogate Key , conseidered as Primary Key for the Fact"
       - name: date_sk
         tests:
           - not_null:

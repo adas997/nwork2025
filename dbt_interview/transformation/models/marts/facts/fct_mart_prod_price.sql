@@ -61,6 +61,7 @@ final as (
     select p.product_id,
     c.case_id,
     c.account_id,
+    c.contact_id,
     min(pr.unit_price) as min_unit_price,
     max(pr.unit_price) as max_unit_price,
     min(pr.use_standard_price) as min_use_standard_price,
@@ -76,13 +77,17 @@ where is_prod_deleted = 1
 group by p.product_id,
     c.case_id,
     c.account_id,
+    c.contact_id,
     p.prod_load_date
 )
 select {{ dbt_utils.generate_surrogate_key (['prod_load_date'    
            ]) }} as date_sk,
+       {{ dbt_utils.generate_surrogate_key (['product_id' ,'case_id','account_id','contact_id'
+           ]) }} as fct_prod_sk,
     product_id,
     case_id,
     account_id,
+    contact_id,
     {{ cents_to_dollars('min_unit_price') }} as min_unit_price_usd,
     {{ cents_to_dollars('max_unit_price') }} as max_unit_price_usd,
     {{ cents_to_dollars('min_use_standard_price') }} as min_use_standard_price_usd,

@@ -113,6 +113,10 @@ select {{ dbt_utils.generate_surrogate_key (
         ['account_load_date','opportunity_load_date'     
            ]
     ) }} as date_sk,
+    {{ dbt_utils.generate_surrogate_key (
+        ['account_id','opportunity_id' ,'contact_id' ,'user_id'  
+           ]
+    ) }} as fct_revenue_sk,
     account_id,
     opportunity_id,
     contact_id,
