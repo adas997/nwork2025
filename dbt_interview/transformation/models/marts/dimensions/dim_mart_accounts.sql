@@ -78,9 +78,10 @@ a.is_deleted as is_account_deleted,
 co.is_deleted as is_contact_deleted,
 -- Dates
 a.acc_created_date,
-a.acc_modified_date,
+--a.acc_modified_date,
+coalesce(a.acc_created_date,a.acc_modified_date) as acc_modified_date,
 co.con_created_date,
-co.con_modified_date,
+coalesce(co.con_created_date,co.con_modified_date) as con_modified_date ,
 current_date() as account_load_date
 from account_rec a
     left join contact_rec co on (a.account_id = co.account_id)

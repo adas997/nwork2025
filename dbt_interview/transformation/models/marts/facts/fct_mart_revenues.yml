@@ -119,6 +119,22 @@ models:
         data_type: double
         description: ""
 
+      - name: acc_modified_month
+        data_type: bigint
+        description: "Account Modified Month"
+
+      - name: acc_modified_year
+        data_type: bigint
+        description: "Account Modified Year"
+
+      - name: oppr_modified_month
+        data_type: bigint
+        description: "Opportunity Modified Month"
+
+      - name: oppr_modified_year
+        data_type: bigint
+        description: "Opportunity Modified Year"
+
       - name: account_load_date
         data_type: date
         description: "Last account load date"

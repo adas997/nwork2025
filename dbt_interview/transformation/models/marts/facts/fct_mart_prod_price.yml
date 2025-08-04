@@ -1,7 +1,7 @@
 models:
 
   - name: fct_mart_prod_price
-    description: "This is the fact table that contains aggregated product price measures and related ids. Joined to product and price dimension"
+    description: "This is the fact table that contains aggregated product price measures (year, month) and related ids. Joined to product and price dimension"
     columns:
       - name: fct_prod_sk  
         data_type: varchar      
@@ -128,6 +128,22 @@ models:
               config:
                 store_failures: true
         description: "Total Unit price"
+
+      - name: prod_modified_month
+        data_type: bigint
+        description: "Product Month"
+
+      - name: prod_modified_year
+        data_type: bigint
+        description: "Product Year"
+
+      - name: case_modified_month
+        data_type: bigint
+        description: "Case Month"
+
+      - name: case_modified_year
+        data_type: bigint
+        description: "Case Year"
 
       - name: prod_load_date
         data_type: date

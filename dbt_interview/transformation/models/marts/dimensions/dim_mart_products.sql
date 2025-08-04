@@ -50,7 +50,8 @@ p.product_description,
 p.quantity_unit,
 -- DWH Dates
 p.prod_created_date,
-p.prod_modified_date,
+--p.prod_modified_date,
+coalesce(p.prod_created_date,p.prod_modified_date) as prod_modified_date,
 -- Snapshot Dates
 p.is_deleted as is_prod_deleted,
 current_date() as prod_load_date

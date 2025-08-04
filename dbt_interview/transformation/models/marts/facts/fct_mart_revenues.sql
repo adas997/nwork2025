@@ -76,16 +76,47 @@ dim_users as
 
      {% endif%}
 ),
-final as 
+fact_data as 
 (
-select dim_acc.account_id,
+select 
+    {{ dbt_utils.generate_surrogate_key (
+        ['a.acc_modified_date','o.oppr_modified_date'     
+           ]
+    ) }} as date_sk,
+    dim_acc.account_id,
     dim_opp.opportunity_id,
     dim_acc.contact_id,
     u.user_id,
-    sum(a.annual_revenue) as total_revenue_earned,
-    sum(o.amount) as total_opportunity_amount,
-    sum(o.expected_revenue) as total_revenue_expected,
-    avg(o.probability) as average_probability,
+    a.annual_revenue,
+    o.amount,
+    o.expected_revenue,
+    o.probability,
+    --dim_acc.account_load_date,
+    --dim_opp.opportunity_load_date,
+
+     a.acc_modified_date,
+
+    extract(
+    month
+    from a.acc_modified_date
+    ) as acc_modified_month,
+
+    extract(
+    year
+    from a.acc_modified_date
+    ) as acc_modified_year,
+
+    o.oppr_modified_date,
+
+    extract(
+    month
+    from o.oppr_modified_date
+    ) as oppr_modified_month,
+
+    extract(
+    year
+    from o.oppr_modified_date
+    ) as oppr_modified_year,
     dim_acc.account_load_date,
     dim_opp.opportunity_load_date,
     from account_rec a
@@ -98,21 +129,49 @@ select dim_acc.account_id,
     left join dim_users u on (
         u.account_id = dim_acc.account_id
         and u.contact_id = dim_acc.contact_id
-    )
+               )
 where dim_acc.is_account_deleted = 1
     and dim_opp.is_opportunity_deleted = 1
-group by dim_acc.account_id,
-    dim_opp.opportunity_id,
-    dim_acc.contact_id,
-    u.user_id,
-    dim_acc.account_load_date,
-    dim_opp.opportunity_load_date
-
+),
+final as 
+(  select
+    f.date_sk,
+    f.account_id,
+    f.opportunity_id,
+    f.contact_id,
+    f.user_id,
+    sum(f.annual_revenue) as total_revenue_earned,
+    sum(f.amount) as total_opportunity_amount,
+    sum(f.expected_revenue) as total_revenue_expected,
+    avg(f.probability) as average_probability,
+    f.acc_modified_month,
+    f.acc_modified_year,
+    f.oppr_modified_month,
+    f.oppr_modified_year,
+    f.account_load_date,
+    f.opportunity_load_date
+    from fact_data f  
+    left join {{ ref ('dim_mart_date') }} d 
+     on ( d.dim_date_sk = f.date_sk 
+     and d.month_of_year_number = f.acc_modified_month
+     and d.year_number = f.acc_modified_year     
+     and d.month_of_year_number = f.oppr_modified_month
+     and d.year_number = f.oppr_modified_year
+       )
+    group by 
+    f.date_sk,
+    f.account_id,
+    f.opportunity_id,
+    f.contact_id,
+    f.user_id,
+    f.acc_modified_month,
+    f.acc_modified_year,
+    f.oppr_modified_month,
+    f.oppr_modified_year,
+    f.account_load_date,
+    f.opportunity_load_date
 )
-select {{ dbt_utils.generate_surrogate_key (
-        ['account_load_date','opportunity_load_date'     
-           ]
-    ) }} as date_sk,
+select 
     {{ dbt_utils.generate_surrogate_key (
         ['account_id','opportunity_id' ,'contact_id' ,'user_id'  
            ]
@@ -124,7 +183,10 @@ select {{ dbt_utils.generate_surrogate_key (
     {{ cents_to_dollars('total_revenue_earned') }} as total_revenue_earned_usd,
     {{ cents_to_dollars('total_opportunity_amount') }} as total_opportunity_amount_usd,
     {{ cents_to_dollars('total_revenue_expected') }} as total_revenue_expected_usd,
-    average_probability,
+    acc_modified_month,
+    acc_modified_year,
+    oppr_modified_month,
+    oppr_modified_year,
     account_load_date,
     opportunity_load_date
 from final

@@ -53,7 +53,8 @@ o.opportunity_type,
 o.is_deleted as is_opportunity_deleted,
 --DWH Dates
 o.oppr_created_date,
-o.oppr_modified_date,
+--o.oppr_modified_date,
+coalesce(o.oppr_created_date,o.oppr_modified_date) as oppr_modified_date ,
 current_date() as opportunity_load_date
 from opportunity_rec o   
 )

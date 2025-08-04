@@ -57,16 +57,42 @@ case_data as
 
 ),
 
-final as (
-    select p.product_id,
+fct_data as (
+ 
+    select {{ dbt_utils.generate_surrogate_key (['prod_modified_date' ,'case_modified_date'   
+               ]) }} as date_sk,
+    p.product_id,
     c.case_id,
     c.account_id,
     c.contact_id,
-    min(pr.unit_price) as min_unit_price,
-    max(pr.unit_price) as max_unit_price,
-    min(pr.use_standard_price) as min_use_standard_price,
-    max(pr.use_standard_price) as max_use_standard_price,
-    sum(pr.unit_price + pr.use_standard_price) as total_unit_price,
+    pr.unit_price,
+    pr.unit_price,
+    pr.use_standard_price,
+    pr.use_standard_price,
+    pr.unit_price + pr.use_standard_price,
+    p.prod_modified_date,
+
+    extract(
+    month
+    from p.prod_modified_date
+    ) as prod_modified_month,
+
+    extract(
+    year
+    from p.prod_modified_date
+    ) as prod_modified_year,
+
+    c.case_modified_date,
+
+    extract(
+    month
+    from c.case_modified_date
+    ) as case_modified_month,
+
+    extract(
+    year
+    from c.case_modified_date
+    ) as case_modified_year,
     p.prod_load_date
 from prod_data p
     left join price_data pr on (pr.product_id = p.product_id)
@@ -74,24 +100,59 @@ from prod_data p
 where is_prod_deleted = 1
     and pr.is_deleted = 1
     and c.is_deleted = 1
-group by p.product_id,
-    c.case_id,
-    c.account_id,
-    c.contact_id,
-    p.prod_load_date
+),
+final as 
+(
+    select f.date_sk,
+    f.product_id,
+    f.case_id,
+    f.account_id,
+    f.contact_id,
+    min(unit_price) as min_unit_price,
+    max(unit_price) as max_unit_price,
+    min(use_standard_price) as min_use_standard_price,
+    max(use_standard_price) as max_use_standard_price,
+    sum(unit_price + use_standard_price) as total_unit_price,
+    f.prod_modified_month,
+    f.prod_modified_year,
+    f.case_modified_month,
+    f.case_modified_year,
+    f.prod_load_date
+    from fct_data f 
+    left join {{ ref ('dim_mart_date')}} d 
+     on ( d.dim_date_sk = f.date_sk 
+     and d.month_of_year_number = f.prod_modified_month
+     and d.year_number = f.prod_modified_year     
+     and d.month_of_year_number = f.case_modified_month
+     and d.year_number = f.case_modified_year
+     )
+     group by
+    f.date_sk,
+    f.product_id,
+    f.case_id,
+    f.account_id,
+    f.contact_id,
+    f.prod_modified_month,
+    f.prod_modified_year,
+    f.case_modified_month,
+    f.case_modified_year,
+    f.prod_load_date
 )
-select {{ dbt_utils.generate_surrogate_key (['prod_load_date'    
-           ]) }} as date_sk,
-       {{ dbt_utils.generate_surrogate_key (['product_id' ,'case_id','account_id','contact_id'
-           ]) }} as fct_prod_sk,
-    product_id,
-    case_id,
-    account_id,
-    contact_id,
-    {{ cents_to_dollars('min_unit_price') }} as min_unit_price_usd,
-    {{ cents_to_dollars('max_unit_price') }} as max_unit_price_usd,
-    {{ cents_to_dollars('min_use_standard_price') }} as min_use_standard_price_usd,
-    {{ cents_to_dollars('max_use_standard_price') }} as max_use_standard_price_usd,
-    {{ cents_to_dollars('total_unit_price') }} as total_unit_price_usd,
-    prod_load_date
+select 
+           {{ dbt_utils.generate_surrogate_key (['product_id' ,'case_id','account_id','contact_id'
+               ]) }} as fct_prod_sk,
+        product_id,
+        case_id,
+        account_id,
+        contact_id,
+        {{ cents_to_dollars('min_unit_price') }} as min_unit_price_usd,
+        {{ cents_to_dollars('max_unit_price') }} as max_unit_price_usd,
+        {{ cents_to_dollars('min_use_standard_price') }} as min_use_standard_price_usd,
+        {{ cents_to_dollars('max_use_standard_price') }} as max_use_standard_price_usd,
+        {{ cents_to_dollars('total_unit_price') }} as total_unit_price_usd,
+        prod_modified_month,
+        prod_modified_year,
+        case_modified_month,
+        case_modified_year,
+        prod_load_date
 from final

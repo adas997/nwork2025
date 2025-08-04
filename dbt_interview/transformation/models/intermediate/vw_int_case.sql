@@ -33,7 +33,8 @@ select case_id,
     stopstartdate as stop_start_date,
     createddate as case_created_date,
     createdbyid as case_created_by,
-    lastmodifieddate as case_modified_date,
+    --lastmodifieddate as case_modified_date,
+    coalesce(createddate,lastmodifieddate) as case_modified_date,
     lastmodifiedbyid as case_modified_by
 from case_data
 where rn = 1
