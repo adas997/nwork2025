@@ -4,7 +4,7 @@
     incremental_strategy = 'merge',
     incremental_predicates = [
       "DBT_INTERNAL_DEST.account_load_date > dateadd(day, -7, current_date)
-      or DBT_INTERNAL_DEST.opportunity_load_date > dateadd(day, -7, current_date)"
+      , DBT_INTERNAL_DEST.opportunity_load_date > dateadd(day, -7, current_date)"
     ],
     post_hook = [
             """
