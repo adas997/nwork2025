@@ -14,7 +14,7 @@ models:
                 warn_if: ">10" 
                 store_failures: true    
         description: "Surrogate Key , conseidered as Primary Key for the Fact"
-        
+
       - name: date_sk
         data_type: varchar
         description: "To refer to date dimension"
@@ -52,8 +52,33 @@ models:
         description: ""
 
       - name: account_id
-        data_type: varchar
-        
+        tests:
+          - not_null:
+              tags: [critical]
+          - relationships:
+              config:
+                severity: error 
+                error_if: ">100"
+                warn_if: ">10" 
+                store_failures: true
+              to: ref('dim_mart_cases')
+              field: case_id
+        data_type: varchar        
+        description: ""
+
+      - name: contact_id
+        tests:
+          - not_null:
+              tags: [critical]
+          - relationships:
+              config:
+                severity: error 
+                error_if: ">100"
+                warn_if: ">10" 
+                store_failures: true
+              to: ref('dim_mart_cases')
+              field: case_id
+        data_type: varchar        
         description: ""
 
       - name: min_unit_price_usd
