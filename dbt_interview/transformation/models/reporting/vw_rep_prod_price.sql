@@ -36,7 +36,11 @@ final as (
     f.max_unit_price_usd as "Max Unit Price (USD)",
     f.min_use_standard_price_usd as "Min Standard Price (USD)",
     f.max_use_standard_price_usd as "Max Standard Price (USD)",
-    f.total_unit_price_usd as "Total Unit Price (USD)"
+    f.total_unit_price_usd as "Total Unit Price (USD)",
+    f.prod_modified_month as "Product Month",
+    f.prod_modified_year as "Product Year",
+    f.case_modified_month as " Case Month",
+    f.case_modified_year as " Case Year"
 from {{ ref ('fct_mart_prod_price') }} f
     join case_details c on 
     (

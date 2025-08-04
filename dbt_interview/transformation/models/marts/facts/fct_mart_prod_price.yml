@@ -1,7 +1,10 @@
 models:
 
   - name: fct_mart_prod_price
-    description: "This is the fact table that contains aggregated product price measures (year, month) and related ids. Joined to product and price dimension"
+    description: >
+      This is the fact table that contains aggregated product price measures (by year, month) 
+      and related ids. Joined to product and price dimension.
+    
     columns:
       - name: fct_prod_sk  
         data_type: varchar      

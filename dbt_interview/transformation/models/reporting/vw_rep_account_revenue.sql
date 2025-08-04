@@ -42,7 +42,11 @@ fct_data as
       f.total_revenue_earned_usd as "Total Revenue earned (USD)" ,
       f.total_opportunity_amount_usd as "Total Amount (USD)",
       f.total_revenue_expected_usd as "Total Revenue expected (USD)",
-      f.average_probability as "Avg. Probability"
+      f.average_probability as "Avg. Probability",
+      f.acc_modified_month as "Account Month",
+      f.acc_modified_year as "Account Year",
+      f.oppr_modified_month as "Opportunity Month",
+      f.oppr_modified_year as "Opportunity Year",
       from {{ ref ('fct_mart_revenues') }}  f
       left join {{ ref ('dim_mart_users') }} u 
          on (f.user_id = u.user_id)
@@ -58,8 +62,11 @@ select
  f."Total Revenue earned (USD)",
  f."Total Amount (USD)",
  f."Total Revenue expected (USD)",
- f."Avg. Probability"
-
+ f."Avg. Probability",
+ f."Account Month",
+ f."Account Year",
+ f."Opportunity Month",
+ f."Opportunity Year"
  from fct_data f
     inner join dim_details a on (a."Account Id" = f.account_id and 
                                 a."Opportunity Id" = f.opportunity_id)

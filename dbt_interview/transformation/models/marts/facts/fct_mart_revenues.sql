@@ -183,6 +183,7 @@ select
     {{ cents_to_dollars('total_revenue_earned') }} as total_revenue_earned_usd,
     {{ cents_to_dollars('total_opportunity_amount') }} as total_opportunity_amount_usd,
     {{ cents_to_dollars('total_revenue_expected') }} as total_revenue_expected_usd,
+    {{ cents_to_dollars('average_probability') }} as average_probability,
     acc_modified_month,
     acc_modified_year,
     oppr_modified_month,
