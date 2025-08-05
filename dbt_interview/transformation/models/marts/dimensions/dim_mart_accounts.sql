@@ -1,10 +1,5 @@
 {{ config(
-    materialized = 'incremental',
-    unique_key = ['account_id','contact_id' ],
-    incremental_strategy = 'merge',
-    incremental_predicates = [
-      "DBT_INTERNAL_DEST.acc_modified_date > dateadd(day, -7, current_date)"
-    ],
+    materialized = 'table',
     post_hook = [
             """
             insert into main.log_model_run_details
@@ -20,24 +15,14 @@ with account_rec as
     select *
      from {{ ref('vw_int_account') }}
 
-     {% if is_incremental() %}
-
-     where acc_modified_date > (select coalesce(max(acc.acc_modified_date),'1900-01-01') from {{this}} acc )
-
-
-     {% endif%}
+     
 ),
 contact_rec as
 (
     select * 
     from {{ ref ('vw_int_contact') }}
 
-    {% if is_incremental() %}
-
-     where con_modified_date > (select coalesce(max(con_modified_date),'1900-01-01') from {{this}}  )
-
-
-     {% endif%}
+    
 ),
 final as
 (
@@ -85,14 +70,13 @@ coalesce(co.con_created_date,co.con_modified_date) as con_modified_date ,
 current_date() as account_load_date
 from account_rec a
     left join contact_rec co on (a.account_id = co.account_id)
+    inner join {{ ref ('snaps_account') }} sa  on (sa.account_id = a.account_id )
+    inner join {{ ref ('snaps_contact') }} sb  on (sb.contact_id = co.contact_id )
 where 1 = 1
+and current_date() between sa.dbt_valid_from and coalesce(sa.dbt_valid_to,'9999-12-31')
+and current_date() between sb.dbt_valid_from and coalesce(sb.dbt_valid_to,'9999-12-31')
 )
 select *
 from final
+ 
 
-{% if is_incremental() %}
-
-where acc_modified_date >= (select coalesce(max(acc_modified_date),'1900-01-01') from {{ this }} )
-   and con_modified_date >= (select coalesce(max(con_modified_date),'1900-01-01') from {{ this }} )
-
-{% endif %}

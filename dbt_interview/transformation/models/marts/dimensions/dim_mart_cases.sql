@@ -1,11 +1,5 @@
 {{ config(
-    materialized = 'incremental',
-    unique_key = ['case_id',
-           'case_number' ],
-    incremental_strategy = 'merge',
-    incremental_predicates = [
-      "DBT_INTERNAL_DEST.case_modified_date > dateadd(day, -7, current_date)"
-    ],
+    materialized = 'table',
     post_hook = [
             """
             insert into main.log_model_run_details
@@ -23,13 +17,6 @@ case_rec as
     select *
     from {{ ref ('vw_int_case') }}
 
-     {% if is_incremental() %}
-
-     where case_modified_date > (select coalesce(max(case_modified_date),'1900-01-01') from {{this}}  )
-
-
-     {% endif%}
-
 )
 select 
 -- Surrogate Key
@@ -41,9 +28,5 @@ select
           }} as case_sk,
 cs.*
 from case_rec cs
-
-{% if is_incremental() %}
-
-where cs.case_modified_date >= (select coalesce(max(case_modified_date),'1900-01-01') from {{ this }} )
-
-{% endif %}
+inner join {{ ref ('snaps_case') }} sc  on (sc.case_id = cs.case_id )
+where current_date() between sc.dbt_valid_from and coalesce(sc.dbt_valid_to,'9999-12-31')

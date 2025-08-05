@@ -1,11 +1,5 @@
 {{ config(
-    materialized = 'incremental',
-    unique_key = ['opportunity_id',
-           'opportunity_name' ],
-    incremental_strategy = 'merge',
-    incremental_predicates = [
-      "DBT_INTERNAL_DEST.oppr_modified_date > dateadd(day, -7, current_date)"
-    ],
+    materialized = 'table',
     post_hook = [
             """
             insert into main.log_model_run_details
@@ -22,13 +16,6 @@ opportunity_rec as
 (
     select *
     from {{ ref ('vw_int_opportunity') }}
-
-     {% if is_incremental() %}
-
-     where oppr_modified_date > (select coalesce(max(oppr_modified_date),'1900-01-01') from {{this}}  )
-
-
-     {% endif%}
 
 ),
 
@@ -56,14 +43,9 @@ o.oppr_created_date,
 --o.oppr_modified_date,
 coalesce(o.oppr_created_date,o.oppr_modified_date) as oppr_modified_date ,
 current_date() as opportunity_load_date
-from opportunity_rec o   
+from opportunity_rec o  
+inner join {{ ref ('snaps_opportunity') }} so  on (o.opportunity_id = so.opportunity_id )
+where current_date() between so.dbt_valid_from and coalesce(so.dbt_valid_to,'9999-12-31') 
 )
 
 select * from final
-
-
-{% if is_incremental() %}
-
-where oppr_modified_date >= (select coalesce(max(oppr_modified_date),'1900-01-01') from {{ this }} )
-
-{% endif %}

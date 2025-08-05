@@ -1,13 +1,5 @@
 {{ config(
-    materialized = 'incremental',
-    unique_key = ['u.user_id',
-           'u.user_role_id',
-           'u.user_name',
-           'ur.role_name' ],
-    incremental_strategy = 'merge',
-    incremental_predicates = [
-      "DBT_INTERNAL_DEST.user_modified_date > dateadd(day, -7, current_date)"
-    ],
+    materialized = 'table',
     post_hook = [
             """
             insert into main.log_model_run_details
@@ -63,8 +55,6 @@ select {{ dbt_utils.generate_surrogate_key (
     u.user_modified_date
 from user_data u
     left join user_role_data ur on (u.user_role_id = ur.user_role_id)
-where u.is_active = 1
- {% if is_incremental() %}
-        and u.user_modified_date >= dateadd(day, -7, current_date)
-        and 
-{% endif %}
+    inner join {{ ref ('snaps_user') }} su  on (u.user_id = su.user_id )
+where current_date() between su.dbt_valid_from and coalesce(su.dbt_valid_to,'9999-12-31') 
+

@@ -1,12 +1,5 @@
 {{ config(
-    materialized = 'incremental',
-    unique_key = ['product_id',
-           'pricebook_entry_id',
-           'pricebook_id' ],
-    incremental_strategy = 'merge',
-    incremental_predicates = [
-      "DBT_INTERNAL_DEST.prod_modified_date > dateadd(day, -7, current_date)"
-    ],
+    materialized = 'table',
     post_hook = [
             """
             insert into main.log_model_run_details
@@ -24,12 +17,7 @@ prod_rec as
     select *
     from {{ ref('vw_int_product') }}
 
-    {% if is_incremental() %}
-
-     where prod_modified_date > (select coalesce(max(prod_modified_date),'1900-01-01') from {{this}}  )
-
-
-     {% endif%}
+    
 
 ),
 final as 
@@ -56,13 +44,9 @@ coalesce(p.prod_created_date,p.prod_modified_date) as prod_modified_date,
 p.is_deleted as is_prod_deleted,
 current_date() as prod_load_date
 from prod_rec p
+inner join {{ ref ('snaps_product') }} sp  on (p.product_id = sp.product_id )
+where current_date() between sp.dbt_valid_from and coalesce(sp.dbt_valid_to,'9999-12-31') 
 )
 select *
 from final
 
-
-{% if is_incremental() %}
-
-where prod_modified_date >= (select coalesce(max(prod_modified_date),'1900-01-01') from {{ this }} )
-
-{% endif %}
