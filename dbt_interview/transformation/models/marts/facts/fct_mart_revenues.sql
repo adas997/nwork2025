@@ -1,11 +1,6 @@
 {{ config(
     materialized = 'incremental',
     unique_key = ['account_id','opportunity_id'],
-    incremental_strategy = 'merge',
-    incremental_predicates = [
-      "DBT_INTERNAL_DEST.account_load_date > dateadd(day, -7, current_date)
-      , DBT_INTERNAL_DEST.opportunity_load_date > dateadd(day, -7, current_date)"
-    ],
     post_hook = [
             """
             insert into main.log_model_run_details

@@ -1,10 +1,6 @@
 {{ config(
     materialized = 'incremental',
     unique_key = ['product_id','product_code','case_id','account_id'],
-    incremental_strategy = 'merge',
-    incremental_predicates = [
-      "DBT_INTERNAL_DEST.prod_load_date > dateadd(day, -7, current_date)"
-    ],
     post_hook = [
             """
             insert into main.log_model_run_details
@@ -102,7 +98,7 @@ where is_prod_deleted = 1
     and c.is_deleted = 1
 
     {% if is_incremental() %}
-    
+
      and p.prod_load_date >= (select coalesce(max(prod_load_date),'1900-01-01') from {{ this }} )
 
      {% endif%}
