@@ -1,5 +1,6 @@
 {{ config(
-    materialized = 'table',
+    materialized = 'incremental',
+    unique_key = ['o.opportunity_id','o.opportunity_name'],
     post_hook = [
             """
             insert into main.log_model_run_details
@@ -16,6 +17,13 @@ opportunity_rec as
 (
     select *
     from {{ ref ('vw_int_opportunity') }}
+
+    {% if is_incremental() %}
+
+     where oppr_modified_date > (select coalesce(max(oppr_modified_date),'1900-01-01') from {{this}}  )
+
+
+     {% endif%}
 
 ),
 
@@ -46,6 +54,14 @@ current_date() as opportunity_load_date
 from opportunity_rec o  
 inner join {{ ref ('snaps_opportunity') }} so  on (o.opportunity_id = so.opportunity_id )
 where current_date() between so.dbt_valid_from and coalesce(so.dbt_valid_to,'9999-12-31') 
+
+{% if is_incremental() %}
+
+     and o.oppr_modified_date > (select coalesce(max(oppr_modified_date),'1900-01-01') from {{this}}  )
+
+
+{% endif%}
+
 )
 
 select * from final

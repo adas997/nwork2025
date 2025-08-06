@@ -1,5 +1,6 @@
 {{ config(
-    materialized = 'table',
+    materialized = 'incremental',
+    unique_key = ['p.product_id'],
     post_hook = [
             """
             insert into main.log_model_run_details
@@ -16,6 +17,13 @@ prod_rec as
 (
     select *
     from {{ ref('vw_int_product') }}
+
+     {% if is_incremental() %}
+
+     where prod_modified_date > (select coalesce(max(prod_modified_date),'1900-01-01') from {{this}}  )
+
+
+     {% endif%}
 
     
 
@@ -46,6 +54,14 @@ current_date() as prod_load_date
 from prod_rec p
 inner join {{ ref ('snaps_product') }} sp  on (p.product_id = sp.product_id )
 where current_date() between sp.dbt_valid_from and coalesce(sp.dbt_valid_to,'9999-12-31') 
+
+{% if is_incremental() %}
+
+     and p.prod_modified_date > (select coalesce(max(prod_modified_date),'1900-01-01') from {{this}}  )
+
+
+{% endif%}
+
 )
 select *
 from final

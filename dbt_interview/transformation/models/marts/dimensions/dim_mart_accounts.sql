@@ -1,5 +1,6 @@
 {{ config(
-    materialized = 'table',
+    materialized = 'incremental',
+    unique_key = ['a.account_id','co.contact_id'],
     post_hook = [
             """
             insert into main.log_model_run_details
@@ -15,12 +16,26 @@ with account_rec as
     select *
      from {{ ref('vw_int_account') }}
 
+     {% if is_incremental() %}
+
+     where acc_modified_date > (select coalesce(max(acc_modified_date),'1900-01-01') from {{this}}  )
+
+
+     {% endif%}
+
      
 ),
 contact_rec as
 (
     select * 
     from {{ ref ('vw_int_contact') }}
+
+    {% if is_incremental() %}
+
+     where con_modified_date > (select coalesce(max(con_modified_date),'1900-01-01') from {{this}}  )
+
+
+     {% endif%}
 
     
 ),
@@ -75,6 +90,14 @@ from account_rec a
 where 1 = 1
 and current_date() between sa.dbt_valid_from and coalesce(sa.dbt_valid_to,'9999-12-31')
 and current_date() between sb.dbt_valid_from and coalesce(sb.dbt_valid_to,'9999-12-31')
+
+    {% if is_incremental() %}
+
+     and a.acc_modified_date >= (select coalesce(max(acc_modified_date),'1900-01-01') from {{ this }} )
+     and co.con_modified_date >= (select coalesce(max(con_modified_date),'1900-01-01') from {{ this }} )
+
+     {% endif%}
+
 )
 select *
 from final
